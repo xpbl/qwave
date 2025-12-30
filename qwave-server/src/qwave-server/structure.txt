@@ -1,9 +1,58 @@
-qwave-server
-├ main.py |
-├
-├
-├
-├
-├
-├
-╰
+qwave-server/                    │ top level python package ====================
+├ main.py                        │ FastAPI entry point and server start
+├ config.py                      │ server config (paths, api keys, init, etc)
+├ database.py                    │ session setup and connection to qwave.db
+├ models.py                      │ SQLAlchemy models (track, album, artist, etc)
+│                                │
+├ api/                           │ FastAPI routes ==============================
+│  ├ __init__.py                 │ 
+│  ├ auth.py                     │ /login, /register, /logout
+│  ├ tracks.py                   │ /tracks/list, /get, /upload
+│  ├ albums.py                   │ /albums/get, /sort
+│  ├ playlists.py                │ /playlists/create, /get, /add, /remove
+│  ├ search.py                   │ /search
+│  ╰ stream.py                   │ /stream/{track_id} + seeking
+│                                │
+├ services/                      │ logic called by routes and cli ==============
+│  ├ __init__.py                 │
+│  ├ import_service.py           │ import flow (auto > fingerprint > manual)
+│  ├ metadata_service.py         │ mutagen > MusicBrainz > AccoustID
+│  ├ transcode_service.py        │ called by worker to pretranscode to opus
+│  ├ file_service.py             │ path sanitization and organization
+│  ╰ backup.py                   │ TBD, possible full library and db backup
+│                                │
+├ workers/                       │ background job processing ===================
+│  ├ __init__.py                 │ 
+│  ├ job_queue.py                │ queue management and ETAs
+│  ╰ worker.py                   │ worker thread for transcode_service.py
+│                                │
+├ cli/                           │ command line management utils ===============
+│  ├ __init__.py                 │ 
+│  ├ init.py                     │ first time setup and init (add alias)
+│  ╰ bulk_import.py              │ local import for  
+│                                │
+├ utils/                         │ helpers =====================================
+│  ├ __init__.py                 │
+│  ├ validators.py               │ file type and input type validation 
+│  ╰ ...                         │
+│                                │
+╰ tests/                         │ unit tests ==================================
+   ├ test_metadata.py            │ 
+   ╰ ...                         │
+                                 │
+data/                            │ made on new server runs =====================
+├ qwave.db                       │ migration?
+├ config.yaml                    │ note immutable bitrate setting
+╰ music/                         │ per user
+   ├ Artist Name/                │
+   │  ╰ Album Name (YYYY)/       │ in case of duplicates
+   │     ╰ 01 - Track Name.opus  │ using opus for best quality to file size
+   ╰ Artist Name/                │
+      ╰ singles/                 │ display on the same level as albums
+         ╰ Track Name.opus       │ modern artists without full albums
+                                 │
+qwave-client/                    │ web client, make api available for others ====
+╰ architecture tbd               │ research needed
+                                 │
+qwave-docs/                      │ really good docs =============================
+╰ really good docs.md            │ theyre really good
