@@ -1,7 +1,8 @@
 import os
 
 def entry():
-    pass
+    print("test success")
+    input()
 
 if __name__ == "__main__":
     entry()
