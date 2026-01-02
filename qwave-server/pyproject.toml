@@ -1,0 +1,36 @@
+[project]
+name = "qwave"
+version = "0.1.0"
+description = "Lightweight music-only media server"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "sqlalchemy>=2.0.0",
+    "mutagen>=1.47.0",
+    "passlib[bcrypt]>=1.7.4",
+    "python-multipart>=0.0.6",
+    "pyyaml>=6.0",
+]
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+
+[build-system]
+requires = ["uv_build >= 0.7.19, <0.9.0"]
+build-backend = "uv_build"
+
+[project.scripts]
+qwave        = "qwave.main:entry"
+qwave_init   = "qwave.cli.init:entry"
+qwave_upload = "qwave.cli.bulk_import:entry"
+
+[tool.setuptools.packages.find]
+where = ["src"]
