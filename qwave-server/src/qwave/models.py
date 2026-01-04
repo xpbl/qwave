@@ -4,6 +4,9 @@ from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
+def utc_now():
+    return datetime.now(timezone.utc)
+
 # ASSOCIATION TABLES
 track_artists = Table(
     "track_artists",
@@ -33,7 +36,7 @@ class User(Base):
 
     id =            Column(Integer,  primary_key = True,  autoincrement = True)
     username =      Column(String(255), nullable = False, unique = True, index = True)
-    created_at =    Column(DateTime,    nullable = False, default = datetime.now(timezone.utc))
+    created_at =    Column(DateTime,    nullable = False, default = utc_now)
     password_hash = Column(String(255), nullable = False)
 
     tracks =    relationship("Track",    back_populates = "added_by", cascade = "all, delete-orphan")
@@ -48,7 +51,7 @@ class Session(Base):
     
     id =         Column(Integer, primary_key = True,  autoincrement = True)
     token =      Column(String(36), nullable = False, unique = True, index = True) # UUID
-    created_at = Column(DateTime,   nullable = False, default = datetime.now(timezone.utc))
+    created_at = Column(DateTime,   nullable = False, default = utc_now)
     expires_at = Column(DateTime,   nullable = False)
     user_id =    Column(Integer, ForeignKey("users.id", ondelete = "CASCADE"), nullable = False)
     
@@ -92,7 +95,7 @@ class Track(Base):
     duration =         Column(Float,       nullable = False) # seconds
     file_path =        Column(String(512), nullable = False) # original path
     opus_path =        Column(String(512), nullable = False) # usable path
-    added_date =       Column(DateTime,    nullable = False, default = datetime.now(timezone.utc))
+    added_date =       Column(DateTime,    nullable = False, default = utc_now)
     track_number =     Column(Integer,     nullable = True)
     needs_review =     Column(Boolean,     nullable = False, default = False)
     cover_art_path =   Column(String(512), nullable = True) # keep null
@@ -124,7 +127,7 @@ class Playlist(Base):
     id =         Column(Integer,  primary_key = True, autoincrement = True)
     name =       Column(String(255), nullable = False)
     is_public =  Column(Boolean,     nullable = False, default = False)
-    created_at = Column(DateTime,    nullable = False, default = datetime.now(timezone.utc))
+    created_at = Column(DateTime,    nullable = False, default = utc_now)
     user_id =    Column(Integer, ForeignKey("users.id", ondelete = "CASCADE"), nullable = False)
     
     owner =  relationship("User",  back_populates = "playlists")
@@ -139,7 +142,7 @@ class Job(Base): # ooooooo spooopy
     id =            Column(Integer, primary_key = True, autoincrement = True)
     type =          Column(String(50), nullable = False) # "transcode", "fingerprint", etc
     status =        Column(String(50), nullable = False, default = "pending") # "pending", "running", "complete", "failed"
-    created_at =    Column(DateTime,   nullable = False, default = datetime.now(timezone.utc))
+    created_at =    Column(DateTime,   nullable = False, default = utc_now)
     started_at =    Column(DateTime,   nullable = True)
     completed_at =  Column(DateTime,   nullable = True)
     error_message = Column(Text,       nullable = True)
