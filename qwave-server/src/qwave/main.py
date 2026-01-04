@@ -1,5 +1,3 @@
-import os
-
 def entry():
     print("test success")
     input()
