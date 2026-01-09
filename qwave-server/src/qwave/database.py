@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Generator
 
 from qwave.models import Base
-# from qwave.config import get_config # TODO
+from qwave.config import get_config # TODO
 
 _engine = None
 _SessionLocal = None

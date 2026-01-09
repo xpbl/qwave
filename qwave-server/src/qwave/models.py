@@ -46,19 +46,23 @@ class User(Base):
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}')>"
     
-class Session(Base):
-    __tablename__ = "sessions"
-    
-    id =         Column(Integer, primary_key = True,  autoincrement = True)
-    token =      Column(String(36), nullable = False, unique = True, index = True) # UUID
-    created_at = Column(DateTime,   nullable = False, default = utc_now)
-    expires_at = Column(DateTime,   nullable = False)
-    user_id =    Column(Integer, ForeignKey("users.id", ondelete = "CASCADE"), nullable = False)
-    
-    user = relationship("User", back_populates = "sessions")
-    
-    def __repr__(self):
-        return f"<Session(id={self.id}, user_id={self.user_id}, expires_at={self.expires_at})>"
+## * unless you want to track sessions i'd advise against this
+## * simply because jwts are stateless and put less strain on your database
+## -- bliss
+
+# class Session(Base):
+#     __tablename__ = "sessions"
+#     
+#     id =         Column(Integer, primary_key = True,  autoincrement = True)
+#     token =      Column(String(36), nullable = False, unique = True, index = True) # UUID 
+#     created_at = Column(DateTime,   nullable = False, default = utc_now)
+#     expires_at = Column(DateTime,   nullable = False)
+#     user_id =    Column(Integer, ForeignKey("users.id", ondelete = "CASCADE"), nullable = False)
+#     
+#     user = relationship("User", back_populates = "sessions")
+#     
+#     def __repr__(self):
+#         return f"<Session(id={self.id}, user_id={self.user_id}, expires_at={self.expires_at})>"
 
 class Artist(Base):
     __tablename__ = "artists"
@@ -98,7 +102,7 @@ class Track(Base):
     added_date =       Column(DateTime,    nullable = False, default = utc_now)
     track_number =     Column(Integer,     nullable = True)
     needs_review =     Column(Boolean,     nullable = False, default = False)
-    cover_art_path =   Column(String(512), nullable = True) # keep null
+    cover_art_path =   Column(String(512), nullable = True) # null until implemented
     added_by_user_id = Column(Integer, ForeignKey("users.id", ondelete = "CASCADE"), nullable = False)
     album_id =         Column(Integer, ForeignKey("albums.id", ondelete = "SET NULL"), nullable = True)
     
